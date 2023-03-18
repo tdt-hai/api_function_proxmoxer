@@ -1,0 +1,4 @@
+- Install python3
+- Install module proxmoxer
+- Install module dotenv
+- Create file .env add variable
