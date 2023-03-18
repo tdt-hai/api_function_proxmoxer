@@ -7,7 +7,6 @@ load_dotenv()
 host = os.environ['HOST']
 user = os.environ['USER']
 passwd = os.environ['PASS']
-print(host,user,passwd)
 proxmox = ProxmoxAPI(
     host, user=user + '@pam', password=passwd, verify_ssl=False
 )
@@ -19,8 +18,8 @@ def get_all_name_vm(vms):
     arr = []
     for vm in vms:
         if vm['status'] == 'running':
-            a = "{0}".format(vm['name'])
-            arr.append(a)
+            name = vm['name']
+            arr.append([name])
     return arr
 #Hàm lấy tất cả VM và pool
 def get_all_vm_name_pool(vms):
@@ -29,23 +28,26 @@ def get_all_vm_name_pool(vms):
         if vm['status'] == 'running':
             name = vm['name']
             pool = vm['pool']
-            status = vm['status']
-            arr.append([name, pool,status])
+            arr.append([name, pool])
     return arr
-# hàm ghi xuống file txt
-def write_txt_file(arr,filename):
-    with open(filename, 'w') as f:
-        for line in arr:
-            f.write(line)
-            f.write('\n')
-# hàm ghi xuống file txt
+#Hàm lấy tất cả VM,pool,maxcpu,maxmem in node for all cluster
+def get_all_vm_name_cpu_mem(vms):
+    arr = []
+    for vm in vms:
+        if vm['status'] == 'running':
+            name = vm['name']
+            maxcpu = vm['maxcpu']
+            maxmem = vm['maxmem']
+            node = vm['node']
+            pool = vm['pool']
+            arr.append([name,maxcpu,maxmem,pool,node])
+    return arr
+# hàm ghi xuống file csv
 def write_csv_file(data, filename):
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         for row in data:
             writer.writerow(row)
-
-
 #writetofile(get_all_name_vm(vms))
 #writetofile(get_all_vm_name_pool(vms))
-#write_csv_file(get_all_vm_name_pool(vms),'readme.csv')
+write_csv_file(get_all_vm_name_cpu_mem(vms),'readme.csv')
