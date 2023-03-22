@@ -13,7 +13,38 @@ proxmox = ProxmoxAPI(
 # Get a list of all virtual machines in the Proxmox cluster
 vms = proxmox.cluster.resources.get(type='vm')
 pools = proxmox.pools.get()
+nodes = proxmox.nodes.get()
 
+#Hàm lấy tất cả node name
+def get_all_node_name(nodes):
+    arr = []
+    for node in nodes:
+            arr.append(node['node'])
+    return arr
+
+#Hàm lấy tất cả vmid running in node
+def get_all_vmid_running_in_node(nodes):
+    arr = []
+    for node in nodes:
+        for vmid in proxmox.nodes(node['node']).qemu.get():
+            if vmid['status'] == 'running':
+                arr.append(vmid['vmid'])
+    return arr
+
+#Hàm lấy tất cả firewall 
+def get_all_firewall(nodes):
+    arr = []
+    for node in nodes:
+        for vmid in proxmox.nodes(node['node']).qemu.get():
+            if vmid['status'] == 'running':
+                config = proxmox.nodes(node['node']).qemu(vmid['vmid']).config.get()
+                if 'net0' in config:
+                    name = config['name']
+                    net  = config['net0']
+                    if 'firewall' not in net:
+                        arr.append([name,net])
+    return arr
+    
 #Hàm lấy tất cả pool in proxmox
 def get_all_pools(pools):
     arr = []
