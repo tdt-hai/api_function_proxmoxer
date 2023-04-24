@@ -5,10 +5,10 @@ import os
 load_dotenv()
 
 host = os.environ['HOST']
-user = os.environ['USER']
+users = os.environ['USERS']
 passwd = os.environ['PASS']
 proxmox = ProxmoxAPI(
-    host, user=user + '@pam', password=passwd, verify_ssl=False
+    host, user= users + '@pam', password=passwd, verify_ssl=False
 )
 # Get a list of all virtual machines in the Proxmox cluster
 vms = proxmox.cluster.resources.get(type='vm')
