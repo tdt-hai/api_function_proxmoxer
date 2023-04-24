@@ -73,6 +73,7 @@ def get_all_vm_storage(nodes,vm_name_pool):
                             if scsi0 is not None or scsi1 is not None or scsi2 is not None or scsi3 is not None or scsi4 is not None:
                                 arr.append([name,vm[1],vm[2], scsi0,scsi1,scsi2,scsi3,scsi4])
     return arr
+vm_name_pool = get_all_vm_name_pool1()
 #Hàm lấy tất cả pool in proxmox
 def get_all_pools(pools):
     arr = []
